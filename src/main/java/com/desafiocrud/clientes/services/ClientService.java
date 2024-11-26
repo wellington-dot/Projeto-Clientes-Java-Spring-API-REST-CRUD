@@ -3,15 +3,12 @@ package com.desafiocrud.clientes.services;
 import com.desafiocrud.clientes.dto.ClientDTO;
 import com.desafiocrud.clientes.entities.Client;
 import com.desafiocrud.clientes.repositories.ClientRespository;
-import com.desafiocrud.clientes.services.exceptions.DatabaseException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.desafiocrud.clientes.services.exceptions.ResourceNotFoundException;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -52,15 +49,12 @@ public class ClientService {
         }
     }
 
-    @Transactional(propagation = Propagation.SUPPORTS)
+    @Transactional
     public void deleteClient(Long id){
         if(!repository.existsById(id)){
             throw new ResourceNotFoundException("Recurso não encontrado");
-        }
-        try{
+        } else {
             repository.deleteById(id);
-        } catch(DataIntegrityViolationException e){
-            throw new DatabaseException("Falha de integridade");
         }
     }
 
